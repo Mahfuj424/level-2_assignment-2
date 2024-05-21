@@ -17,7 +17,7 @@ const createProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err: any) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
       message: err.message || "Somthing went wrong",
       error: err,
@@ -28,14 +28,18 @@ const createProduct = async (req: Request, res: Response) => {
 // find all product controller
 export const getAllProduct = async (req: Request, res: Response) => {
   try {
-    const result = await ProductServices.getAllProductIntoDB();
+    const { searchTerm } = req.query;
+
+    const result = await ProductServices.getAllProductIntoDB(
+      searchTerm as string
+    );
     res.status(200).json({
       success: true,
       message: "Product fetched successfully",
       data: result,
     });
   } catch (err: any) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
       message: err.message || "Somthing went wrong",
       error: err,
@@ -54,7 +58,7 @@ export const getSingleProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err: any) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
       message: err.message || "Somthing went wrong",
       error: err,
@@ -73,7 +77,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 
     const result = await ProductServices.updateProductIntoDB(
       productId,
-      validateProductData,
+      validateProductData
     );
     res.status(200).json({
       success: true,
@@ -81,7 +85,7 @@ export const updateProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err: any) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
       message: err.message || "Somthing went wrong",
       error: err,
@@ -100,33 +104,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err: any) {
-    res.status(400).json({
-      success: false,
-      message: err.message || "Somthing went wrong",
-      error: err,
-    });
-  }
-};
-
-// searching product
-export const searchProduct = async (req: Request, res: Response) => {
-  try {
-    const { searchTerm } = req.params;
-    console.log(searchTerm);
-    const query = searchTerm
-      ? {
-          $or: [{ name: { $regex: searchTerm, $options: "i" } }],
-        }
-      : {};
-
-    const result = await ProductServices.searchProductIntoDB(searchTerm);
-    res.status(200).json({
-      success: true,
-      message: `Products matching search term ${query} fetched successfully!`,
-      data: result,
-    });
-  } catch (err: any) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
       message: err.message || "Somthing went wrong",
       error: err,
@@ -140,5 +118,4 @@ export const ProductController = {
   getSingleProduct,
   updateProduct,
   deleteProduct,
-  searchProduct,
 };
