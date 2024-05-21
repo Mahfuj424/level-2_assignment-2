@@ -1,9 +1,5 @@
 import { Schema, model } from "mongoose";
-import {
-  TInventory,
-  TProduct,
-  TProductVariant,
-} from "./product-interface";
+import { TInventory, TProduct, TProductVariant } from "./product-interface";
 
 // Mongoose schema definitions
 const ProductVariantSchema: Schema = new Schema<TProductVariant>({
@@ -25,7 +21,6 @@ const ProductSchema: Schema = new Schema<TProduct>({
   variants: { type: [ProductVariantSchema], required: true },
   inventory: { type: InventorySchema, required: true },
 });
-
 
 // product model
 export const Product = model<TProduct>("Product", ProductSchema);

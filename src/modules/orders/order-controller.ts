@@ -8,15 +8,14 @@ import { Request, Response } from "express";
 const createProduct = async (req: Request, res: Response) => {
   try {
     const orderData: TOrder = req.body;
-    // validate with zod
-
+    // Validate with zod
     const zodParseData = OrderValidationSchema.parse(orderData);
 
     const product = await Product.findById(zodParseData.productId);
     if (!product) {
-      return res.status(400).json({
-        success: true,
-        message: "Product Not Found",
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
       });
     }
 
@@ -36,15 +35,15 @@ const createProduct = async (req: Request, res: Response) => {
 
     await product.save();
 
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       message: "Order created successfully",
       data: result,
     });
   } catch (err: any) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
-      message: err.message || "Somthing went wrong",
+      message: err.message || "Something went wrong",
       error: err,
     });
   }
@@ -54,16 +53,23 @@ const createProduct = async (req: Request, res: Response) => {
 export const getAllOrder = async (req: Request, res: Response) => {
   try {
     const { email } = req.query;
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email query parameter is required",
+      });
+    }
+
     const result = await OrderServices.getAllOrderIntoDB(email as string);
     res.status(200).json({
       success: true,
-      message: "Order fetched successfully",
+      message: "Orders fetched successfully",
       data: result,
     });
   } catch (err: any) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
-      message: err.message || "Somthing went wrong",
+      message: err.message || "Something went wrong",
       error: err,
     });
   }

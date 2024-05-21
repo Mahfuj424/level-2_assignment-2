@@ -18,8 +18,6 @@ export const getAllOrderIntoDB = async (email: string) => {
   }
 };
 
-
-
 export const OrderServices = {
   createOrderIntoDB,
   getAllOrderIntoDB,

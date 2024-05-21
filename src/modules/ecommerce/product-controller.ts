@@ -1,18 +1,17 @@
 import { Request, Response } from "express";
-// import ProductValidationSchema from "./product-validation";
 import { ProductServices } from "./product-services";
 import ProductValidationSchema from "./product-validation";
 import { TProduct } from "./product-interface";
 
-// creating a product controller
+// Creating a product controller
 const createProduct = async (req: Request, res: Response) => {
   try {
-    const productData : TProduct = req.body;
-    // validate with zod
+    const productData: TProduct = req.body;
+    // Validate with zod
     const zodParseData = ProductValidationSchema.parse(productData);
 
     const result = await ProductServices.createProductIntoDB(zodParseData);
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       message: "Product created successfully",
       data: result,
@@ -20,39 +19,45 @@ const createProduct = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || "Somthing went wrong",
+      message: err.message || "Something went wrong",
       error: err,
     });
   }
 };
 
-// find all product controller
+// Find all product controller
 export const getAllProduct = async (req: Request, res: Response) => {
   try {
     const { searchTerm } = req.query;
 
     const result = await ProductServices.getAllProductIntoDB(
-      searchTerm as string
+      searchTerm as string,
     );
     res.status(200).json({
       success: true,
-      message: `${searchTerm ? `Products matching search term ${searchTerm} fetched successfully!` : "Product fetched successfully"}`,
+      message: `${searchTerm ? `Products matching search term ${searchTerm} fetched successfully!` : "Products fetched successfully"}`,
       data: result,
     });
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || "Somthing went wrong",
+      message: err.message || "Something went wrong",
       error: err,
     });
   }
 };
 
-// get single product controller
+// Get single product controller
 export const getSingleProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const result = await ProductServices.getSingleProductIntoDB(productId);
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
     res.status(200).json({
       success: true,
       message: "Product fetched successfully",
@@ -61,25 +66,31 @@ export const getSingleProduct = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || "Somthing went wrong",
+      message: err.message || "Something went wrong",
       error: err,
     });
   }
 };
 
-// update a product controller
+// Update a product controller
 export const updateProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const updatedData = req.body;
 
-    //   validate with zod
+    // Validate with zod
     const validateProductData = ProductValidationSchema.parse(updatedData);
 
     const result = await ProductServices.updateProductIntoDB(
       productId,
-      validateProductData
+      validateProductData,
     );
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
     res.status(200).json({
       success: true,
       message: "Product updated successfully",
@@ -88,17 +99,23 @@ export const updateProduct = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || "Somthing went wrong",
+      message: err.message || "Something went wrong",
       error: err,
     });
   }
 };
 
-// delete product controller
+// Delete product controller
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const result = await ProductServices.deleteProductIntoDB(productId);
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
     res.status(200).json({
       success: true,
       message: "Product deleted successfully",
@@ -107,7 +124,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || "Somthing went wrong",
+      message: err.message || "Something went wrong",
       error: err,
     });
   }
