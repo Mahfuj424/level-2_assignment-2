@@ -2,11 +2,12 @@ import { Request, Response } from "express";
 // import ProductValidationSchema from "./product-validation";
 import { ProductServices } from "./product-services";
 import ProductValidationSchema from "./product-validation";
+import { TProduct } from "./product-interface";
 
 // creating a product controller
 const createProduct = async (req: Request, res: Response) => {
   try {
-    const productData = req.body;
+    const productData : TProduct = req.body;
     // validate with zod
     const zodParseData = ProductValidationSchema.parse(productData);
 
@@ -35,7 +36,7 @@ export const getAllProduct = async (req: Request, res: Response) => {
     );
     res.status(200).json({
       success: true,
-      message: "Product fetched successfully",
+      message: `${searchTerm ? `Products matching search term ${searchTerm} fetched successfully!` : "Product fetched successfully"}`,
       data: result,
     });
   } catch (err: any) {
