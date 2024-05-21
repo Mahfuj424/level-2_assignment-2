@@ -53,23 +53,28 @@ const createProduct = async (req: Request, res: Response) => {
 export const getAllOrder = async (req: Request, res: Response) => {
   try {
     const { email } = req.query;
-    if (!email) {
-      return res.status(400).json({
+    const result = await OrderServices.getAllOrderIntoDB(email as string);
+
+    if (result.length === 0) {
+      return res.status(404).json({
         success: false,
-        message: "Email query parameter is required",
+        message: "Order not found",
       });
     }
 
-    const result = await OrderServices.getAllOrderIntoDB(email as string);
     res.status(200).json({
-      success: true,
-      message: "Orders fetched successfully",
-      data: result,
+      success: email ? result.length > 0 : true,
+      message: email
+        ? result.length > 0
+          ? "Orders fetched successfully for user email!"
+          : "Email does not match"
+        : "Orders fetched successfully",
+      data: result.length > 0 ? result : null,
     });
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || "Something went wrong",
+      message: "Order not found",
       error: err,
     });
   }

@@ -33,6 +33,14 @@ export const getAllProduct = async (req: Request, res: Response) => {
     const result = await ProductServices.getAllProductIntoDB(
       searchTerm as string
     );
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
     res.status(200).json({
       success: searchTerm ? result.length > 0 : true,
       message: searchTerm
@@ -114,10 +122,10 @@ export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const result = await ProductServices.deleteProductIntoDB(productId);
-    if (!result) {
+    if (result.deletedCount === 0) {
       return res.status(404).json({
         success: false,
-        message: "Product not found",
+        message: `Product not found with this id: ${productId}`,
       });
     }
     res.status(200).json({
@@ -133,6 +141,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
     });
   }
 };
+
 
 export const ProductController = {
   createProduct,
