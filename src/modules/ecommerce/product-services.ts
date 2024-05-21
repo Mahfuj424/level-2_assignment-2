@@ -11,7 +11,13 @@ export const createProductIntoDB = async (productData: TProduct) => {
 export const getAllProductIntoDB = async (searchTerm: string) => {
   let query = {};
   if (searchTerm) {
-    query = { name: { $regex: searchTerm, $options: "i" } };
+    query = {
+      $or: [
+        { name: { $regex: searchTerm, $options: "i" } },
+        { category: { $regex: searchTerm, $options: "i" } },
+        { description: { $regex: searchTerm, $options: "i" } },
+      ],
+    };
   }
   const result = await Product.find(query);
   return result;
@@ -26,7 +32,7 @@ export const getSingleProductIntoDB = async (id: string) => {
 // update product into db
 export const updateProductIntoDB = async (
   id: string,
-  productData: TProduct,
+  productData: TProduct
 ) => {
   const result = await Product.findOneAndUpdate({ _id: id }, productData);
   return result;

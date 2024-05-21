@@ -31,12 +31,16 @@ export const getAllProduct = async (req: Request, res: Response) => {
     const { searchTerm } = req.query;
 
     const result = await ProductServices.getAllProductIntoDB(
-      searchTerm as string,
+      searchTerm as string
     );
     res.status(200).json({
-      success: true,
-      message: `${searchTerm ? `Products matching search term ${searchTerm} fetched successfully!` : "Products fetched successfully"}`,
-      data: result,
+      success: searchTerm ? result.length > 0 : true,
+      message: searchTerm
+        ? result.length > 0
+          ? `Products matching search term ${searchTerm} fetched successfully!`
+          : "No matching product"
+        : "Products fetched successfully",
+      data: result.length > 0 ? result : null,
     });
   } catch (err: any) {
     res.status(500).json({
@@ -83,7 +87,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 
     const result = await ProductServices.updateProductIntoDB(
       productId,
-      validateProductData,
+      validateProductData
     );
     if (!result) {
       return res.status(404).json({
@@ -119,7 +123,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Product deleted successfully",
-      data: result,
+      data: null,
     });
   } catch (err: any) {
     res.status(500).json({
