@@ -22,7 +22,7 @@ Follow these steps to get started with the project:
 
 ## Run Project
 
-Follow these command
+Follow these command and add these command package.json under script object
 
 - project localy start= "start:dev": "ts-node-dev --respawn --transpile-only src/server.ts",
 - convert code to js= "build":"tsc",

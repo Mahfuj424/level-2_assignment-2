@@ -30,7 +30,7 @@ export const getAllProduct = async (req: Request, res: Response) => {
     const { searchTerm } = req.query;
 
     const result = await ProductServices.getAllProductIntoDB(
-      searchTerm as string
+      searchTerm as string,
     );
 
     if (result.length === 0) {
@@ -90,7 +90,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 
     const result = await ProductServices.updateProductIntoDB(
       productId,
-      validateProductData
+      validateProductData,
     );
     if (!result) {
       return res.status(404).json({
