@@ -46,7 +46,7 @@ const createOrder = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "An error occurred while creating the order",
+      message: "Product id dose not match",
       data: err,
     });
   }
