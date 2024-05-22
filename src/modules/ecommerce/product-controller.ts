@@ -20,7 +20,6 @@ const createProduct = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Failed to create product",
-      error: err,
     });
   }
 };
@@ -31,7 +30,7 @@ export const getAllProduct = async (req: Request, res: Response) => {
     const { searchTerm } = req.query;
 
     const result = await ProductServices.getAllProductIntoDB(
-      searchTerm as string,
+      searchTerm as string
     );
 
     if (result.length === 0) {
@@ -52,7 +51,6 @@ export const getAllProduct = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch products",
-      error: err,
     });
   }
 };
@@ -77,7 +75,6 @@ export const getSingleProduct = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch product",
-      error: err,
     });
   }
 };
@@ -93,7 +90,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 
     const result = await ProductServices.updateProductIntoDB(
       productId,
-      validateProductData,
+      validateProductData
     );
     if (!result) {
       return res.status(404).json({
@@ -110,7 +107,6 @@ export const updateProduct = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Failed to update product",
-      error: err,
     });
   }
 };
@@ -135,7 +131,6 @@ export const deleteProduct = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Failed to delete product",
-      error: err,
     });
   }
 };

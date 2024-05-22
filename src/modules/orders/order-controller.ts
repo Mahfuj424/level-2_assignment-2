@@ -12,6 +12,13 @@ const createOrder = async (req: Request, res: Response) => {
     // Validate order data
     const orderZodParse = OrderValidationSchema.parse(orderData);
 
+    if (orderZodParse.productId === "") {
+      return res.status(400).json({
+        success: false,
+        message: "Product id is empty! please provide product id",
+      });
+    }
+
     // Find the product by ID
     const product = await Product.findById(orderZodParse.productId);
     if (!product) {
@@ -47,7 +54,6 @@ const createOrder = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Product id dose not match",
-      data: err,
     });
   }
 };
@@ -78,7 +84,6 @@ export const getAllOrder = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Something went wrong",
-      error: err,
     });
   }
 };
