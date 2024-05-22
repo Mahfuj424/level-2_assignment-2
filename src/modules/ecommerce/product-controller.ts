@@ -16,10 +16,10 @@ const createProduct = async (req: Request, res: Response) => {
       message: "Product created successfully",
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     res.status(500).json({
       success: false,
-      message: err.message || "Something went wrong",
+      message: "Failed to create product",
       error: err,
     });
   }
@@ -31,29 +31,27 @@ export const getAllProduct = async (req: Request, res: Response) => {
     const { searchTerm } = req.query;
 
     const result = await ProductServices.getAllProductIntoDB(
-      searchTerm as string
+      searchTerm as string,
     );
 
     if (result.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "Product not found",
+        message: "No products found",
       });
     }
 
     res.status(200).json({
-      success: searchTerm ? result.length > 0 : true,
+      success: true,
       message: searchTerm
-        ? result.length > 0
-          ? `Products matching search term ${searchTerm} fetched successfully!`
-          : "No matching product"
+        ? `Products matching search term "${searchTerm}" fetched successfully!`
         : "Products fetched successfully",
-      data: result.length > 0 ? result : null,
+      data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     res.status(500).json({
       success: false,
-      message: err.message || "Something went wrong",
+      message: "Failed to fetch products",
       error: err,
     });
   }
@@ -75,10 +73,10 @@ export const getSingleProduct = async (req: Request, res: Response) => {
       message: "Product fetched successfully",
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     res.status(500).json({
       success: false,
-      message: err.message || "Something went wrong",
+      message: "Failed to fetch product",
       error: err,
     });
   }
@@ -95,7 +93,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 
     const result = await ProductServices.updateProductIntoDB(
       productId,
-      validateProductData
+      validateProductData,
     );
     if (!result) {
       return res.status(404).json({
@@ -108,10 +106,10 @@ export const updateProduct = async (req: Request, res: Response) => {
       message: "Product updated successfully",
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     res.status(500).json({
       success: false,
-      message: err.message || "Something went wrong",
+      message: "Failed to update product",
       error: err,
     });
   }
@@ -125,7 +123,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
     if (result.deletedCount === 0) {
       return res.status(404).json({
         success: false,
-        message: `Product not found with this id: ${productId}`,
+        message: `Product not found with id: ${productId}`,
       });
     }
     res.status(200).json({
@@ -133,15 +131,14 @@ export const deleteProduct = async (req: Request, res: Response) => {
       message: "Product deleted successfully",
       data: null,
     });
-  } catch (err: any) {
+  } catch (err) {
     res.status(500).json({
       success: false,
-      message: err.message || "Something went wrong",
+      message: "Failed to delete product",
       error: err,
     });
   }
 };
-
 
 export const ProductController = {
   createProduct,

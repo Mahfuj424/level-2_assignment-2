@@ -5,46 +5,49 @@ import OrderValidationSchema from "./order-validation";
 import { Request, Response } from "express";
 
 // create order controller
-const createProduct = async (req: Request, res: Response) => {
+const createOrder = async (req: Request, res: Response) => {
   try {
     const orderData: TOrder = req.body;
-    // Validate with zod
-    const zodParseData = OrderValidationSchema.parse(orderData);
 
-    const product = await Product.findById(zodParseData.productId);
+    // Validate order data
+    const orderZodParse = OrderValidationSchema.parse(orderData);
+
+    // Find the product by ID
+    const product = await Product.findById(orderZodParse.productId);
     if (!product) {
-      return res.status(404).json({
+      return res.status(400).json({
         success: false,
-        message: "Product not found",
+        message: "No data found with this product id",
       });
     }
 
-    if (product.inventory.quantity < zodParseData.quantity) {
+    // Check product inventory
+    if (product.inventory.quantity < orderZodParse.quantity) {
       return res.status(400).json({
         success: false,
         message: "Insufficient quantity available in inventory",
       });
     }
 
-    const result = await OrderServices.createOrderIntoDB(zodParseData);
+    // Create order into DB
+    const result = await OrderServices.createOrderIntoDB(orderZodParse);
 
-    product.inventory.quantity -= zodParseData.quantity;
-    if (product.inventory.quantity === 0) {
-      product.inventory.inStock = false;
-    }
-
+    // Update product inventory
+    product.inventory.quantity -= orderZodParse.quantity;
+    product.inventory.inStock = product.inventory.quantity > 0;
     await product.save();
 
-    res.status(201).json({
+    // Respond with success
+    res.status(200).json({
       success: true,
       message: "Order created successfully",
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     res.status(500).json({
       success: false,
-      message: err.message || "Something went wrong",
-      error: err,
+      message: "An error occurred while creating the order",
+      data: err,
     });
   }
 };
@@ -71,16 +74,16 @@ export const getAllOrder = async (req: Request, res: Response) => {
         : "Orders fetched successfully",
       data: result.length > 0 ? result : null,
     });
-  } catch (err: any) {
+  } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Order not found",
+      message: "Something went wrong",
       error: err,
     });
   }
 };
 
 export const OrderController = {
-  createProduct,
+  createOrder,
   getAllOrder,
 };

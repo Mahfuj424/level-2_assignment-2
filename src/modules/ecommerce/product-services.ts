@@ -32,9 +32,16 @@ export const getSingleProductIntoDB = async (id: string) => {
 // update product into db
 export const updateProductIntoDB = async (
   id: string,
-  productData: TProduct
+  productData: TProduct,
 ) => {
-  const result = await Product.findOneAndUpdate({ _id: id }, productData);
+  const result = await Product.findOneAndUpdate(
+    { _id: id },
+    { $set: productData },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
   return result;
 };
 

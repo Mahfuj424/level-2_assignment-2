@@ -11,8 +11,8 @@ const InventoryValidationSchema = z.object({
 });
 
 const ProductValidationSchema = z.object({
-  name: z.string(),
-  description: z.string(),
+  name: z.string().trim(),
+  description: z.string().trim(),
   price: z.number(),
   category: z.string(),
   tags: z.array(z.string()),
