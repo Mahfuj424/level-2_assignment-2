@@ -5,6 +5,7 @@ This is the backend project for Assignment-2, built with Node.js, Express, TypeS
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
+
 - You have installed the express
 - You have installed the typescript
 - You have installed the cors
@@ -12,12 +13,19 @@ Before you begin, ensure you have met the following requirements:
 - You have installed the latest version of [Node.js](https://nodejs.org/en/download/)
 - You have installed [MongoDB](https://docs.mongodb.com/manual/installation/)
 - You have a running MongoDB instance (either locally or on a service like MongoDB Atlas)
-- Run npm install 
+- Run npm install
 - You have setup env file and connect to mongodb
 
 ## Getting Started
 
 Follow these steps to get started with the project:
+
+## Run Project
+
+Follow these command
+
+- project localy start= "start:dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+- convert code to js= "build":"tsc",
 
 ### 1. Clone the Repository
 
