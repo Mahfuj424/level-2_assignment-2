@@ -5,10 +5,15 @@ This is the backend project for Assignment-2, built with Node.js, Express, TypeS
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
-
+- You have installed the express
+- You have installed the typescript
+- You have installed the cors
+- You have installed the dotenv
 - You have installed the latest version of [Node.js](https://nodejs.org/en/download/)
 - You have installed [MongoDB](https://docs.mongodb.com/manual/installation/)
 - You have a running MongoDB instance (either locally or on a service like MongoDB Atlas)
+- Run npm install 
+- You have setup env file and connect to mongodb
 
 ## Getting Started
 
